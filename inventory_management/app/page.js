@@ -9,6 +9,12 @@ export default function Home() {
   const [inventory, setInventory] = useState([])
   const [open, setOpen] = useState(false)
   const [itemName, setItemName] = useState('')
+  const [inputText, setInputText] = useState('')
+
+  const inputHandler = (e) => {
+    var lowerCase = e.target.value.toLowerCase()
+    setInputText(lowerCase)
+  }
   
   const updateInventory = async () => {
     const snapshot = query(collection(firestore, 'inventory'))
@@ -20,6 +26,7 @@ export default function Home() {
         ...doc.data(),
       })
     })
+    
     setInventory(inventoryList)
   }
 
@@ -53,11 +60,6 @@ export default function Home() {
     }
 
     await updateInventory()
-  }
-
-  const searchItem = async (item) => {
-    const itemList = inventory
-    itemList.forEach()
   }
 
   useEffect(() => {
@@ -106,13 +108,12 @@ export default function Home() {
           </Stack>
         </Box>
       </Modal>
-      <Button variant="contained" onClick={() => {
-        handleOpen()
-      }}>Add New Item</Button>
       <Box border={'1px solid #000000'} bgcolor={'white'} borderRadius={2}>
         <Box width={'85vw'} height='100px' bgcolor='#ADD8E6' display={'flex'} justifyContent={'space-between'} borderRadius={2} alignItems={'center'} p={5} pr={10}>
           <Typography variant="h2" color='#333'>Inventory Items</Typography>
-          <TextField id="outlined-basic" label="Search..." variant="outlined" />
+      <Button variant="contained" onClick={() => {
+        handleOpen()
+      }}>Add New Item</Button>
         </Box>
         <Stack width='85vw' height='600px' spacing={2} overflow={'auto'}>
           {
