@@ -9,7 +9,7 @@ export default function Home() {
   const [inventory, setInventory] = useState([])
   const [open, setOpen] = useState(false)
   const [itemName, setItemName] = useState('')
-//Video 30:37
+  
   const updateInventory = async () => {
     const snapshot = query(collection(firestore, 'inventory'))
     const docs = await getDocs(snapshot)
@@ -29,7 +29,7 @@ export default function Home() {
 
     if(docSnap.exists()){
       const {quantity} = docSnap.data()
-      if(quantity === 1){
+      if(quantity === 0){
         await deleteDoc(docRef)
       }
       else{
@@ -55,6 +55,11 @@ export default function Home() {
     await updateInventory()
   }
 
+  const searchItem = async (item) => {
+    const itemList = inventory
+    itemList.forEach()
+  }
+
   useEffect(() => {
     updateInventory()
   }, [])
@@ -74,6 +79,7 @@ export default function Home() {
         width={400} 
         bgcolor={'white'} 
         border={'2px solid #000000'} 
+        borderRadius={2}
         boxShadow={24} 
         padding={4} 
         display={'flex'} 
@@ -103,24 +109,36 @@ export default function Home() {
       <Button variant="contained" onClick={() => {
         handleOpen()
       }}>Add New Item</Button>
-      <Box border={'1px solid #000000'}>
-        <Box width={'800px'} height='100px' bgcolor='#ADD8E6' display={'flex'} justifyContent={'center'} alignItems={'center'}>
+      <Box border={'1px solid #000000'} bgcolor={'white'} borderRadius={2}>
+        <Box width={'85vw'} height='100px' bgcolor='#ADD8E6' display={'flex'} justifyContent={'space-between'} borderRadius={2} alignItems={'center'} p={5} pr={10}>
           <Typography variant="h2" color='#333'>Inventory Items</Typography>
+          <TextField id="outlined-basic" label="Search..." variant="outlined" />
         </Box>
-        <Stack width='800px' height='300px' spacing={2} overflow={'auto'}>
+        <Stack width='85vw' height='600px' spacing={2} overflow={'auto'}>
           {
             inventory.map(({name, quantity}) => (
-              <Box key={name} width={'100%'} minHeight={'150px'} display={'flex'} justifyContent={'space-between'} alignItems={'center'} bgcolor={'#f0f0f0'} padding={5}>
+              <Box key={name} width={'100%'} minHeight={'150px'} display={'flex'} justifyContent={'space-between'} alignItems={'center'} borderRadius={2} bgcolor={'#f0f0f0'} padding={5}>
                 <Typography variant="h3" color={'#333'} textAlign={'center'}>{name.charAt(0).toUpperCase() + name.slice(1)}</Typography>
-                <Typography variant="h3" color={'#333'} textAlign={'center'}>{quantity}</Typography>
                 <Stack direction={'row'} spacing={5}>
-                  <Button variant="contained" onClick={() => {
-                    addItem(name)
-                  }}>Add</Button>
-                  <Button variant="contained" onClick={() => {
+                  <Button variant="outlined" onClick={() => {
                     removeItem(name)
-                  }}>Remove</Button>
+                  }}
+                  sx={{
+                    fontSize: 18,
+                  }}
+                  >-</Button>
+                  <Typography variant="h3" color={'#333'} textAlign={'center'}>{quantity}</Typography>
+                  <Button variant="outlined" onClick={() => {
+                    addItem(name)
+                  }}
+                  sx={{
+                    fontSize: 15,
+                  }}
+                  >+</Button>
                 </Stack>
+                <Button variant="contained" onClick={() => {
+                  window.open("https://www.google.com/search?udm=28&q=" + name, "_blank")
+                }}>Buy More</Button>
               </Box>
               
             ))
